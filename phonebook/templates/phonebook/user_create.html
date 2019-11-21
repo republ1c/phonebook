@@ -1,0 +1,17 @@
+{% extends 'phonebook/phonebook_base.html' %}
+
+{% block title %}
+    user Create - {{ phonebook.super }}
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'user_create_url' %}" method="post">
+    <h1 class= "mb-5">User:</h1>
+        {% csrf_token %}
+    <div class="form-group">
+        {{ user }}
+        {{ phonenumber }}
+    </div>
+    <button type="submit" class='btn btn-primary'>Create</button>
+</form>
+{% endblock %}

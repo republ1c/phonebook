@@ -1,0 +1,16 @@
+{% extends 'phonebook/phonebook_base.html' %}
+
+{% block title %}
+    user Update - {{ phonebook.super }}
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'user_update_url' pk=user.pk %}" method="post">
+    <h1 class= "mb-5">User:</h1>
+    {% csrf_token %}
+    <div class="form-group">
+        {{ user_form }}
+    </div>
+    <button type="submit" class='btn btn-primary'>Update</button>
+</form>
+{% endblock %}

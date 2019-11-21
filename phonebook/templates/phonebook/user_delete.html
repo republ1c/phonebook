@@ -1,0 +1,15 @@
+{% extends 'phonebook/phonebook_base.html' %}
+
+{% block title %}
+    user Delete - {{ phonebook.super }}
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'user_delete_url' pk=user.pk %}" method="post">
+    <h1 class= "mb-5">User:</h1>
+    {% csrf_token %}
+    <h3>Confirm this ation ? Delete {{ user.user_name }}?</h3>
+    <a href="{% url 'phonebook' %}">Cancel</a>
+    <button type="submit" class='btn btn-danger'>Delete</button>
+</form>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'phonebook/phonebook_base.html' %}
+
+{% block title %}
+Phonebook
+{% endblock %}
+
+{% block content %}
+<h1 class= "mb-5"></h1>
+{% for u in users %}
+<div class="card">
+    <div class="card-header">
+        {{ u.user_name }} {{ u.user_surname }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ u.user_email }}</h5>
+        <h4 class="card-title">Phones:</h4>
+        {% for p in u.phonenumber_set.all %}
+                {% if p.phonenumber_city != 0 %}
+                    <p class="card-text">City: {{ p.phonenumber_city }}</p>
+                {%endif%}
+                {% if p.phonenumber_mobile != 0 %}
+                    <p class="card-text">Mobile: {{ p.phonenumber_mobile }}</p>
+                {%endif%}
+                {% if p.phonenumber_other != 0 %}
+                    <p class="card-text">Other: {{ p.phonenumber_other }}</p>
+                {%endif%}
+        {% endfor %}
+
+        <a href="{% url 'user_update_url' pk=u.pk %}" class="btn btn-primary">Edit User</a>
+        <a href="{% url 'user_delete_url' pk=u.pk %}" class="btn btn-primary">Delete User</a>
+    </div>
+</div>
+{% endfor %}
+<nav aria-label="...">
+    <ul class="pagination">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+</nav>
+
+{% endblock %}
