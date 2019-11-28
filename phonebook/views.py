@@ -17,11 +17,30 @@ def phonebook_list(request):
     else:
         users = User.objects.all().order_by("user_name")
 
-    #  in process
-    # paginator = Paginator(users, 1)
-    # page = paginator.get_page(1)
+    # pagination
+    paginator = Paginator(users, 2)
+    page_number = request.GET.get('page', 1)
+    page = paginator.get_page(page_number)
 
-    return render(request, 'phonebook/index.html', context={'users': users})
+    # next and preview
+    is_paginated = page.has_other_pages()
+
+    if page.has_previous():
+        prev_url = 'page={}'.format(page.previous_page_number())
+    else:
+        prev_url = ''
+    if page.has_next():
+        next_url = 'page={}'.format(page.next_page_number())
+    else:
+        next_url = ''
+
+    context = {
+        'page': page,
+        'is_paginated': is_paginated,
+        'next_url': next_url,
+        'prev_url': prev_url
+    }
+    return render(request, 'phonebook/index.html', context=context)
 
 
 class UserDelete(View):
@@ -36,6 +55,7 @@ class UserDelete(View):
 
 
 class UserUpdate(View):
+
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         user_form = UserForm(instance=user)
@@ -45,40 +65,26 @@ class UserUpdate(View):
         for p in phonenumber:
             if int(p['phonenumber_user_id']) == int(pk):
                 phonenumber_obj = get_object_or_404(PhoneNumber, pk=p['id'])
-                # print(phonenumber_obj)
                 phonenumber_form = PhoneNumberForm(instance=phonenumber_obj)
                 phonenumber_form_obj.append(phonenumber_form)
-                # return render(request, 'phonebook/user_update.html', context={'user': user, 'phonenumber_form': phonenumber_form})
             else:
                 pass
-        # phonenumber_form = PhoneNumberForm(instance=PhoneNumber.objects.in_bulk(phonenumber_query))
-        # print(phonenumber_form_obj)
         return render(request, 'phonebook/user_update.html', context={'user_form': user_form, 'user': user, 'phonenumber_form_obj': phonenumber_form_obj})
 
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        # phonenumber = get_object_or_404(PhoneNumber, phonenumber_user=pk)
         phonenumber = PhoneNumber.objects.all().values()
-        # print(phonenumber)
         phonenumber_form_obj = []
         user_form = UserForm(request.POST, instance=user)
         if user_form.is_valid():
             user_form.save()
-            # pk = User.objects.get(pk=new_userform.pk)
             i = 0
             for p in phonenumber:
-                # print(p)
-                # print(pk)
-                # print(int(p['phonenumber_user_id']))
                 if int(p['phonenumber_user_id']) == int(pk):
                     phonenumber_obj = get_object_or_404(PhoneNumber, pk=p['id'])
-                    # print(p['id'])
-                    # print(phonenumber_obj)
                     phonenumber_form = PhoneNumberForm(request.POST, instance=phonenumber_obj)
                     phonenumber_form_obj.append(phonenumber_form)
-                    # print(request.POST)
                     if phonenumber_form.is_valid():
-                        # new_userform = user_form.save()
                         new_phonenumber = phonenumber_form.save(commit=False)
                         phonenumber_city_list = request.POST.getlist('phonenumber_city')
                         new_phonenumber.phonenumber_city = phonenumber_city_list[i]
@@ -96,11 +102,10 @@ class UserUpdate(View):
             return redirect('phonebook')
         else:
             return render(request, 'phonebook/user_update.html', context={'user_form': user_form, 'user': user, 'phonenumber_form_obj': phonenumber_form_obj})
-        # phonenumber_form = PhoneNumberForm(request.POST, instance=phonenumber)
-        # phonenumber_form = PhoneNumberForm(request.POST)
 
 
 class UserCreate(View):
+
     def get(self, request):
         user = UserForm()
         phonenumber = PhoneNumberForm()
