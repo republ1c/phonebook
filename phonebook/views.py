@@ -13,7 +13,7 @@ from django.db.models import Q
 def phonebook_list(request):
     search_query = request.GET.get('search', '')
     if search_query:
-        users = User.objects.filter(Q(user_name__icontains=search_query) | Q(user_surname__icontains=search_query) | Q(user_email__icontains=search_query))
+        users = User.objects.filter(Q(user_name__icontains=search_query) | Q(user_surname__icontains=search_query) | Q(user_email__icontains=search_query) | Q(phonenumber__phonenumber_city__icontains=search_query) | Q(phonenumber__phonenumber_mobile__icontains=search_query) | Q(phonenumber__phonenumber_other__icontains=search_query))
     else:
         users = User.objects.all().order_by("user_name")
 
