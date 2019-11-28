@@ -18,7 +18,7 @@ def phonebook_list(request):
         users = User.objects.all().order_by("user_name")
 
     # pagination
-    paginator = Paginator(users, 2)
+    paginator = Paginator(users, 3)
     page_number = request.GET.get('page', 1)
     page = paginator.get_page(page_number)
 
