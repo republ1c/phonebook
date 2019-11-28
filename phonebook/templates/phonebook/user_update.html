@@ -9,7 +9,25 @@
     <h1 class= "mb-5">User:</h1>
     {% csrf_token %}
     <div class="form-group">
-        {{ user_form }}
+        <!-- {{ user_form.as_p }}
+        {% for p in user.phonenumber_set.all %}
+                {% if p.phonenumber_city != 0 %}
+                    <p class="card-text">City: {{ p.phonenumber_city }}</p>
+                {%endif%}
+                {% if p.phonenumber_mobile != 0 %}
+                    <p class="card-text">Mobile: {{ p.phonenumber_mobile }}</p>
+                {%endif%}
+                {% if p.phonenumber_other != 0 %}
+                    <p class="card-text">Other: {{ p.phonenumber_other }}</p>
+                {%endif%}
+        {% endfor %} -->
+        {{ user_form.as_p }}
+        {% for p in phonenumber_form_obj %}
+            <p class="card-text">City: {{ p.phonenumber_city }}</p>
+            <p class="card-text">Mobile: {{ p.phonenumber_mobile }}</p>
+            <p class="card-text">Other: {{ p.phonenumber_other }}</p>
+        {% endfor %}
+        <!-- {{ phonenumber_form.as_p }} -->
     </div>
     <button type="submit" class='btn btn-primary'>Update</button>
 </form>
