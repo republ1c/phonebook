@@ -92,10 +92,8 @@ class UserUpdate(View):
                         new_phonenumber.phonenumber_mobile = phonenumber_mobile_list[i]
                         phonenumber_other_list = request.POST.getlist('phonenumber_other')
                         new_phonenumber.phonenumber_other = phonenumber_other_list[i]
-                        # print(phonenumber_city_list[0 + i])
                         i += 1
                         new_phonenumber.save()
-                        # phonenumber_form.save()
                     else:
                         # UserUpdate.get(PhoneNumber, request, pk)
                         pass
